@@ -14,21 +14,13 @@ export default async function Navbar() {
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-xl bg-surface/70 border-b border-brand-teal/15">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 shrink-0 hover:opacity-90 transition-opacity">
-          <Image
-            src="/ico256.png"
-            alt="TraducIA"
-            width={36}
-            height={36}
-            className="w-8 h-8 sm:w-9 sm:h-9"
-            priority
-          />
+        <Link href="/" className="flex items-center shrink-0 hover:opacity-90 transition-opacity">
           <Image
             src="/texto256.png"
             alt="TraducIA"
             width={200}
             height={44}
-            className="hidden sm:block h-7 w-auto"
+            className="h-7 sm:h-8 w-auto"
             priority
           />
         </Link>
