@@ -64,10 +64,13 @@ export async function translateAction(
     // Default response language: native language from settings, fallback to source
     const defaultResponseLang = settings?.native_language || sourceLanguage;
 
-    const [correctedText, textType, translation, culturalNotes] = await Promise.all([
-      correctText(text.trim(), sourceLanguage),
+    // Step 1: normalize typos/accents (tiny Groq call, ~200ms)
+    const correctedText = await correctText(text.trim(), sourceLanguage);
+
+    // Step 2: translate + enrich + classify in parallel using corrected text
+    const [textType, translation, culturalNotes] = await Promise.all([
       settings ? classifyTextType(text.trim()) : ("casual" as const),
-      translateText(text.trim(), targetLanguage, sourceLanguage),
+      translateText(correctedText, targetLanguage, sourceLanguage),
       generateCulturalNotes(sourceLanguage, targetLanguage, text.trim(), defaultResponseLang),
     ]);
 

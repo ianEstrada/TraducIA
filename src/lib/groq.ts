@@ -101,7 +101,7 @@ Reply with ONLY one word: "professional" or "casual".`;
 
 export async function correctText(text: string, language: string): Promise<string> {
   const safe = sanitize(text, 1000);
-  const prompt = `Fix typos, add missing accents, and correct spelling in this ${language} text. Return ONLY the corrected text, no explanations.
+  const prompt = `Fix ONLY obvious typos, missing accents, and punctuation in this ${language} text. Do NOT add words, rephrase, or change meaning. Return only the corrected text.
 
 "${safe}"`;
 
@@ -109,7 +109,7 @@ export async function correctText(text: string, language: string): Promise<strin
     messages: [{ role: "user", content: prompt }],
     model: "llama-3.3-70b-versatile",
     temperature: 0,
-    max_tokens: Math.min(safe.length + 50, 1000),
+    max_tokens: Math.min(safe.length + 30, 500),
   });
 
   return (completion.choices[0]?.message?.content || text).trim();
