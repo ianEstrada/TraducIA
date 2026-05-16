@@ -26,9 +26,9 @@ export default async function Navbar() {
           <Image
             src="/texto256.png"
             alt="TraducIA"
-            width={160}
-            height={36}
-            className="hidden sm:block h-6 w-auto"
+            width={200}
+            height={44}
+            className="hidden sm:block h-7 w-auto"
             priority
           />
         </Link>
