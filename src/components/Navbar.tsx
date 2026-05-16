@@ -5,10 +5,12 @@ import SignOutButton from "./SignOutButton";
 import MobileNav from "./MobileNav";
 
 export default async function Navbar() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {}
 
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-xl bg-surface/70 border-b border-brand-teal/15">
