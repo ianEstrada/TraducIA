@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { LANGUAGES } from "@/lib/languages";
 import SettingsForm from "./SettingsForm";
 
-export default function SettingsPage() {
+function SettingsContent() {
   const searchParams = useSearchParams();
   const onboarding = searchParams.get("onboarding") === "1";
   const [loading, setLoading] = useState(true);
@@ -55,5 +55,13 @@ export default function SettingsPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<div className="max-w-2xl mx-auto px-4 py-20 text-center"><div className="animate-spin h-6 w-6 border-2 border-brand-gold border-t-transparent rounded-full mx-auto" /></div>}>
+      <SettingsContent />
+    </Suspense>
   );
 }
