@@ -99,6 +99,22 @@ Reply with ONLY one word: "professional" or "casual".`;
   return result === "professional" ? "professional" : "casual";
 }
 
+export async function correctText(text: string, language: string): Promise<string> {
+  const safe = sanitize(text, 1000);
+  const prompt = `Fix typos, add missing accents, and correct spelling in this ${language} text. Return ONLY the corrected text, no explanations.
+
+"${safe}"`;
+
+  const completion = await groq.chat.completions.create({
+    messages: [{ role: "user", content: prompt }],
+    model: "llama-3.3-70b-versatile",
+    temperature: 0,
+    max_tokens: Math.min(safe.length + 50, 1000),
+  });
+
+  return (completion.choices[0]?.message?.content || text).trim();
+}
+
 export async function generateCulturalNotes(
   sourceLanguage: string,
   targetLanguage: string,

@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { translateText } from "@/lib/mymemory";
-import { generateCulturalNotes, classifyTextType } from "@/lib/groq";
+import { generateCulturalNotes, classifyTextType, correctText } from "@/lib/groq";
 
 export interface TranslateActionState {
   success: boolean;
@@ -61,20 +61,20 @@ export async function translateAction(
       .eq("user_id", user.id)
       .single();
 
-    let responseLanguage: string | undefined;
-    if (settings) {
-      const textType = await classifyTextType(text.trim());
-      if (textType === "professional" && settings.target_languages?.length > 0) {
-        responseLanguage = settings.target_languages[0];
-      } else {
-        responseLanguage = settings.native_language;
-      }
-    }
+    // Default response language: native language from settings, fallback to source
+    const defaultResponseLang = settings?.native_language || sourceLanguage;
 
-    const [translation, culturalNotes] = await Promise.all([
+    const [correctedText, textType, translation, culturalNotes] = await Promise.all([
+      correctText(text.trim(), sourceLanguage),
+      settings ? classifyTextType(text.trim()) : ("casual" as const),
       translateText(text.trim(), targetLanguage, sourceLanguage),
-      generateCulturalNotes(sourceLanguage, targetLanguage, text.trim(), responseLanguage),
+      generateCulturalNotes(sourceLanguage, targetLanguage, text.trim(), defaultResponseLang),
     ]);
+
+    const isProfessional = settings && textType === "professional" && (settings.target_languages?.length ?? 0) > 0;
+    const settingsLanguage = isProfessional
+      ? settings!.target_languages[0]
+      : defaultResponseLang;
 
     const { data: saved, error: dbError } = await supabase
       .from("translations")
@@ -101,7 +101,7 @@ export async function translateAction(
         translatedText: translation.translatedText,
         sourceLanguage,
         targetLanguage,
-        settingsLanguage: responseLanguage || targetLanguage,
+        settingsLanguage: settingsLanguage,
         confidence: translation.confidence,
         culturalNotes,
         createdAt: saved.created_at,
