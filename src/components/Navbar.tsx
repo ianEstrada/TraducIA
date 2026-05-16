@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import SignInButton from "./SignInButton";
 import SignOutButton from "./SignOutButton";
@@ -15,14 +14,10 @@ export default async function Navbar() {
     <nav className="sticky top-0 z-50 backdrop-blur-xl bg-surface/70 border-b border-brand-teal/15">
       <div className="max-w-5xl mx-auto px-4 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center shrink-0 hover:opacity-90 transition-opacity">
-          <Image
+          <img
             src="/logo.svg"
             alt="TraducIA"
-            width={400}
-            height={100}
             className="h-14 sm:h-16 w-auto"
-            unoptimized
-            priority
           />
         </Link>
 
