@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { LANGUAGES } from "@/lib/languages";
 
@@ -42,17 +43,26 @@ export default function TranslateForm({
   initialSourceLanguage,
   initialTargetLanguage,
 }: Props) {
+  const [charCount, setCharCount] = useState(initialText?.length || 0);
+  const maxChars = 500;
+
   return (
     <form action={action} className="flex flex-col h-full">
-      <textarea
-        id="text"
-        name="text"
-        rows={9}
-        required
-        defaultValue={initialText}
-        placeholder="Enter text to translate..."
-        className="input flex-1 resize-none text-sm"
-      />
+      <div className="flex-1 relative">
+        <textarea
+          id="text"
+          name="text"
+          rows={9}
+          required
+          defaultValue={initialText}
+          placeholder="Enter text to translate..."
+          className="input flex-1 resize-none text-sm h-full"
+          onChange={(e) => setCharCount(e.target.value.length)}
+        />
+        <span className={`absolute bottom-2 right-2 text-2xs px-1.5 py-0.5 rounded-full ${charCount > maxChars ? "bg-red-100 text-red-600" : "bg-surface-100 text-surface-400"}`}>
+          {charCount}/{maxChars}
+        </span>
+      </div>
 
       <div className="flex gap-2 mt-3">
         <select

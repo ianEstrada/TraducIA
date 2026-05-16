@@ -22,6 +22,20 @@ export async function translateText(
   targetLang: string,
   sourceLang: string
 ): Promise<TranslationResult> {
+  // If text fits in one request, translate directly
+  if (new Blob([text]).size <= 450) {
+    return translateChunk(text, targetLang, sourceLang);
+  }
+
+  // Otherwise, chunk and translate in parallel
+  return translateLongText(text, targetLang, sourceLang);
+}
+
+async function translateChunk(
+  text: string,
+  targetLang: string,
+  sourceLang: string
+): Promise<TranslationResult> {
   const params = new URLSearchParams({
     q: text,
     langpair: `${sourceLang}|${targetLang}`,
@@ -64,6 +78,44 @@ export async function translateText(
     translatedText: bestTranslation,
     detectedLanguage,
     confidence: Math.round(bestConfidence * 100),
+  };
+}
+
+function splitIntoChunks(text: string, maxBytes: number): string[] {
+  const chunks: string[] = [];
+  const sentences = text.match(/[^.!?\n]+[.!?\n]*/g) || [text];
+  let current = "";
+
+  for (const sentence of sentences) {
+    const candidate = current + sentence;
+    if (new Blob([candidate]).size > maxBytes && current.length > 0) {
+      chunks.push(current.trim());
+      current = sentence;
+    } else {
+      current = candidate;
+    }
+  }
+  if (current.trim()) chunks.push(current.trim());
+  return chunks.length > 0 ? chunks : [text];
+}
+
+async function translateLongText(
+  text: string,
+  targetLang: string,
+  sourceLang: string
+): Promise<TranslationResult> {
+  const chunks = splitIntoChunks(text, 450);
+
+  const results = await Promise.all(
+    chunks.map((chunk) => translateChunk(chunk, targetLang, sourceLang))
+  );
+
+  return {
+    translatedText: results.map((r) => r.translatedText).join(" "),
+    detectedLanguage: results[0]?.detectedLanguage || sourceLang,
+    confidence: Math.round(
+      results.reduce((sum, r) => sum + r.confidence, 0) / results.length
+    ),
   };
 }
 
