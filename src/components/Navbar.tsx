@@ -16,19 +16,19 @@ export default async function Navbar() {
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 shrink-0 hover:opacity-90 transition-opacity">
           <Image
-            src="/logo-icono.png"
+            src="/ico256.png"
             alt="TraducIA"
-            width={32}
-            height={32}
-            className="w-7 h-7 sm:w-8 sm:h-8"
+            width={36}
+            height={36}
+            className="w-8 h-8 sm:w-9 sm:h-9"
             priority
           />
           <Image
-            src="/logo-texto.png"
+            src="/texto256.png"
             alt="TraducIA"
-            width={100}
-            height={24}
-            className="hidden sm:block h-5 w-auto"
+            width={160}
+            height={36}
+            className="hidden sm:block h-6 w-auto"
             priority
           />
         </Link>
