@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import SignInButton from "./SignInButton";
 import SignOutButton from "./SignOutButton";
@@ -13,9 +14,23 @@ export default async function Navbar() {
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-xl bg-surface/70 border-b border-brand-teal/15">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg text-surface-800 hover:text-brand-gold transition-colors shrink-0">
-          <span className="text-xl">&#x1F310;</span>
-          TraducIA
+        <Link href="/" className="flex items-center gap-2 shrink-0 hover:opacity-90 transition-opacity">
+          <Image
+            src="/logo-icono.png"
+            alt="TraducIA"
+            width={32}
+            height={32}
+            className="w-7 h-7 sm:w-8 sm:h-8"
+            priority
+          />
+          <Image
+            src="/logo-texto.png"
+            alt="TraducIA"
+            width={100}
+            height={24}
+            className="hidden sm:block h-5 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop nav */}

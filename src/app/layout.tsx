@@ -38,8 +38,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <head>
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/logo-icono.png" />
+        <link rel="apple-touch-icon" href="/logo-icono.png" />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col bg-surface`}>
         <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_rgba(197,175,113,0.08),transparent_50%)]" />
