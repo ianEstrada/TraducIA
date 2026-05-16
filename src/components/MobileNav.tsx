@@ -27,7 +27,7 @@ export default function MobileNav({ user }: { user: { email?: string; user_metad
 
       {open && (
         <>
-          <div className="fixed inset-0 top-14 z-40 bg-surface-800/20 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="fixed inset-0 top-16 z-40 bg-surface-800/20 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <div className="absolute top-full left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-brand-teal/15 shadow-soft-lg animate-slide-up">
             <div className="px-4 py-3 space-y-1">
               <Link href="/" onClick={() => setOpen(false)} className="block px-3 py-2 rounded-xl text-surface-700 hover:bg-surface-100 text-sm font-medium transition-colors">
