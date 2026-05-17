@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/?error=auth_failed`);
   }
 
-  // Check if user has settings — if not, redirect to onboarding
+  // Check if user has settings — if not, redirect to onboarding WITH cookies
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -50,7 +50,12 @@ export async function GET(request: NextRequest) {
       .maybeSingle();
 
     if (!settings?.native_language) {
-      return NextResponse.redirect(`${origin}/settings?onboarding=1`);
+      const onboardingResponse = NextResponse.redirect(`${origin}/settings?onboarding=1`);
+      // Copy auth cookies from supabaseResponse to onboardingResponse
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        onboardingResponse.cookies.set(cookie.name, cookie.value, cookie);
+      });
+      return onboardingResponse;
     }
   }
 

@@ -4,3 +4,4 @@ node_modules/
 .env.local
 .env*.local
 groqapi.txt
+client_secret_*.json
