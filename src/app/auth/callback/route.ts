@@ -47,9 +47,9 @@ export async function GET(request: NextRequest) {
       .from("user_settings")
       .select("native_language")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
-    if (!settings) {
+    if (!settings?.native_language) {
       return NextResponse.redirect(`${origin}/settings?onboarding=1`);
     }
   }
